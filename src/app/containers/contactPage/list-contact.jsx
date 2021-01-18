@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "../../components/Link";
-import { getAll } from "../../../services/contact-service";
+import {
+  getAll,
+  findByKey,
+  deleteById,
+} from "../../../services/contact-service";
 
 export function ListContacts() {
   const [contacts, setContacts] = useState([]);
@@ -18,13 +22,60 @@ export function ListContacts() {
     fetchContacts();
   }, []);
 
+  const handleSearch = (event) => {
+    const { value } = event.target;
+    if (value) {
+      findByKey(value)
+        .then((response) => {
+          setContacts(response.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+      fetchContacts();
+    }
+  };
+
+  const deleteContact = (id) => {
+    if (window.confirm("Are you sure to delete this contact?")) {
+      deleteById(id)
+        .then(() => {
+          fetchContacts();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  };
+
   return (
     <>
-      <Link
-        to="/contact/add"
-        label="New contact"
-        className="btn btn-sm btn-primary"
-      />
+      <div className="flex justify-between ">
+        <div>
+          <Link
+            to="/contact/add"
+            label="New contact"
+            className="btn btn-sm btn-primary"
+          />
+        </div>
+
+        <div>
+          <form>
+            <div>
+              <input
+                id="first-name"
+                className="form-field"
+                placeholder="Search"
+                type="text"
+                name="firstname"
+                onChange={handleSearch}
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+
       <table className="table">
         <tbody>
           <tr className="border-b">
@@ -42,7 +93,17 @@ export function ListContacts() {
                   {item.phonenumber ? "+" + item.phonenumber : ""}
                 </td>
                 <td className="tcol flex justify-end">
-                  <Link to="/contact/add" label="Edit" className="link" />
+                  <Link
+                    to={{ pathname: `/contact/edit/${item.id}` }}
+                    label="Edit"
+                    className=""
+                  />
+                  <button
+                    className="ml-5 text-red-500"
+                    onClick={() => deleteContact(item.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

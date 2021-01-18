@@ -16,7 +16,7 @@ export const update = (id, data) => {
   return http.put(`/contact/${id}`, data);
 };
 
-export const remove = (id) => {
+export const deleteById = (id) => {
   return http.delete(`/contact/${id}`);
 };
 
@@ -24,6 +24,6 @@ export const removeAll = () => {
   return http.delete(`/contact`);
 };
 
-export const findByTitle = (title) => {
-  return http.get(`/tutorials?title=${title}`);
+export const findByKey = (key) => {
+  return http.get(`/contact/search/${key}`);
 };

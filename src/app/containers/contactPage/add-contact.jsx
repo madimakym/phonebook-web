@@ -1,26 +1,17 @@
 import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { create } from "../../../services/contact-service";
 
+const initialContactState = {
+  firstname: "",
+  lastname: "",
+  phonenumber: "",
+};
+
 export function AddContact() {
-  const [status, setStatus] = useState("");
-  const [message, setMessage] = useState("");
-  const { register, handleSubmit, errors } = useForm();
+  const [contact, setContact] = useState(initialContactState);
+  const [submitted, setSubmitted] = useState(false);
 
-  const onSubmit = (data) => {
-    create(data)
-      .then((response) => {
-        console.log(response);
-        window.history.back();
-      })
-      .catch((e) => {
-        console.log(e);
-        setStatus("failed");
-      });
-  };
-
-  const [phonenumber, setPhonenumber] = useState("");
   const phoneControl = (value) => {
     if (!value) return value;
     const currentValue = value.replace(/[^\d]/g, "");
@@ -34,8 +25,30 @@ export function AddContact() {
       4
     )} ${currentValue.slice(4)}`;
   };
-  const handleChange = ({ target: { value } }) => {
-    setPhonenumber(phoneControl(value));
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    const value2 = name === "phonenumber" ? phoneControl(value) : value;
+    setContact({ ...contact, [name]: value2 });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (
+      contact.firstname &&
+      contact.lastname &&
+      contact.phonenumber
+    ) {
+      create(contact)
+        .then((response) => {
+          console.log(response);
+          window.history.back();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+    setSubmitted(true);
   };
 
   return (
@@ -44,36 +57,40 @@ export function AddContact() {
         <div className="mt-10">
           <h5 className="text-xl text-center">New contact</h5>
         </div>
-        {status === "failed" ? { message } : null}
         <form
           className="p-10 shadow w-full my-6 space-y-8 bg-white"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit}
         >
           <div>
             <label className="label">Firstname</label>
             <input
-              className="input"
+              id="first-name"
+              class="form-field"
               type="text"
               name="firstname"
-              id="firstname"
-              ref={register({ required: true })}
+              value={contact.firstname}
+              onChange={handleInputChange}
             />
-            {errors.firstname && (
-              <span className="error">This field is required</span>
+            {submitted && !contact.firstname && (
+              <span id="first-name-error" className="error">
+                Please enter a first name
+              </span>
             )}
           </div>
-
           <div>
             <label className="label">Lastname</label>
             <input
-              className="input"
+              id="last-name"
+              class="form-field"
               type="text"
               name="lastname"
-              id="lastname"
-              ref={register({ required: true })}
+              value={contact.lastname}
+              onChange={handleInputChange}
             />
-            {errors.lastname && (
-              <span className="error">This field is required</span>
+            {submitted && !contact.lastname && (
+              <span id="last-name-error" className="error">
+                Please enter a last name
+              </span>
             )}
           </div>
 
@@ -81,29 +98,25 @@ export function AddContact() {
             <label className="label">Phone Number</label>
             <div className="relative flex w-full flex-wrap items-stretch mb-3">
               <span className="icon-input">+</span>
-
               <input
-                className="border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
-                type="text"
-                name="phonenumber"
                 id="phonenumber"
+                class="form-field border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
+                type="text"
                 placeholder=""
-                value={phonenumber}
-                onChange={handleChange}
-                ref={register({ required: true })}
+                name="phonenumber"
+                value={contact.phonenumber}
+                onChange={handleInputChange}
               />
             </div>
-            {errors.phonenumber && (
-              <span className="error">This field is required </span>
+            {submitted && !contact.phonenumber && (
+              <span id="phonenumber-error" className="error">
+                Please enter an phone number
+              </span>
             )}
           </div>
-          <div>
-            <input
-              type="submit"
-              value="Create"
-              className="btn btn-lg btn-primary"
-            />
-          </div>
+          <button className="btn btn-lg btn-primary" type="submit">
+            Register
+          </button>
         </form>
         <div className="text-center">
           <RouterLink to="/" className="text-orange">

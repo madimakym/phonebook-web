@@ -9,7 +9,7 @@
     .label {
         @apply pb-4;
     }
-    .input {
+    .form-field {
         @apply border border-gray-300 px-4 py-2 w-full focus:outline-none;
     }
     .icon-input {

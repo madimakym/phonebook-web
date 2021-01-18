@@ -1,26 +1,33 @@
-import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { create } from "../../../services/contact-service";
+import React, { useState, useEffect } from "react";
+import { Link as RouterLink, useParams } from "react-router-dom";
+import { update } from "../../../services/contact-service";
+import { get } from "../../../services/contact-service";
+
+const initialContactState = {
+  firstname: "",
+  lastname: "",
+  phonenumber: "",
+};
 
 export function EditContact() {
-  const [status, setStatus] = useState("");
-  const [message, setMessage] = useState("");
-  const { register, handleSubmit, errors } = useForm();
+  let { id } = useParams();
+  const [currentContact, setCurrentContact] = useState(initialContactState);
+  const [submitted, setSubmitted] = useState(false);
 
-  const onSubmit = (data) => {
-    create(data)
+  const fetchCurrentContact = (id) => {
+    get(id)
       .then((response) => {
-        console.log(response);
-        window.history.back();
+        setCurrentContact(response.data);
       })
       .catch((e) => {
         console.log(e);
-        setStatus("failed");
       });
   };
 
-  const [phonenumber, setPhonenumber] = useState("");
+  useEffect(() => {
+    fetchCurrentContact(id);
+  }, [id]);
+
   const phoneControl = (value) => {
     if (!value) return value;
     const currentValue = value.replace(/[^\d]/g, "");
@@ -34,46 +41,71 @@ export function EditContact() {
       4
     )} ${currentValue.slice(4)}`;
   };
-  const handleChange = ({ target: { value } }) => {
-    setPhonenumber(phoneControl(value));
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    const value2 = name === "phonenumber" ? phoneControl(value) : value;
+    setCurrentContact({ ...currentContact, [name]: value2 });
   };
+
+  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (
+      currentContact.firstname &&
+      currentContact.lastname &&
+      currentContact.phonenumber
+    ) {
+      update(id, currentContact)
+        .then((response) => {
+          console.log(response);
+          window.history.back();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+    setSubmitted(true);
+  };
+
 
   return (
     <>
       <div className="mx-auto max-w-2xl">
         <div className="mt-10">
-          <h5 className="text-xl text-center">New contact</h5>
+          <h5 className="text-xl text-center">Edit contact</h5>
         </div>
-        {status === "failed" ? { message } : null}
-        <form
-          className="p-10 shadow w-full my-6 space-y-8 bg-white"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="p-10 shadow w-full my-6 space-y-8 bg-white">
           <div>
             <label className="label">Firstname</label>
             <input
-              className="input"
               type="text"
+              class="form-field"
+              id="first-name"
               name="firstname"
-              id="firstname"
-              ref={register({ required: true })}
+              value={currentContact.firstname}
+              onChange={handleInputChange}
             />
-            {errors.firstname && (
-              <span className="error">This field is required</span>
+            {submitted && !currentContact.firstname && (
+              <span id="first-name-error" className="error">
+                Please enter a first name
+              </span>
             )}
           </div>
-
           <div>
             <label className="label">Lastname</label>
             <input
-              className="input"
               type="text"
+              class="form-field"
+              id="last-name"
               name="lastname"
-              id="lastname"
-              ref={register({ required: true })}
+              value={currentContact.lastname}
+              onChange={handleInputChange}
             />
-            {errors.lastname && (
-              <span className="error">This field is required</span>
+            {submitted && !currentContact.lastname && (
+              <span id="last-name-error" className="error">
+                Please enter a last name
+              </span>
             )}
           </div>
 
@@ -81,29 +113,27 @@ export function EditContact() {
             <label className="label">Phone Number</label>
             <div className="relative flex w-full flex-wrap items-stretch mb-3">
               <span className="icon-input">+</span>
-
               <input
-                className="border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
                 type="text"
-                name="phonenumber"
+                class="form-field border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
                 id="phonenumber"
-                placeholder=""
-                value={phonenumber}
-                onChange={handleChange}
-                ref={register({ required: true })}
+                name="phonenumber"
+                value={currentContact.phonenumber}
+                onChange={handleInputChange}
               />
             </div>
-            {errors.phonenumber && (
-              <span className="error">This field is required </span>
+            {submitted && !currentContact.phonenumber && (
+              <span id="phonenumber-error" className="error">
+                Please enter an phone number
+              </span>
             )}
           </div>
-          <div>
-            <input
-              type="submit"
-              value="Create"
-              className="btn btn-lg btn-primary"
-            />
-          </div>
+
+          <input
+            className="btn btn-lg btn-primary text-center"
+            value="Update"
+            onClick={handleSubmit}
+          />
         </form>
         <div className="text-center">
           <RouterLink to="/" className="text-orange">
