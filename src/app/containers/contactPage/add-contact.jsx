@@ -109,7 +109,7 @@ export function AddContact() {
             </div>
             {submitted && !contact.phonenumber && (
               <span id="phonenumber-error" className="error">
-                Please enter an phone number
+                Please enter a phone number
               </span>
             )}
           </div>
