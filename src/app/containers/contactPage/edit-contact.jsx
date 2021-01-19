@@ -39,7 +39,7 @@ export function EditContact() {
     return `${currentValue.slice(0, 2)} ${currentValue.slice(
       2,
       4
-    )} ${currentValue.slice(4)}`;
+    )} ${currentValue.slice(4, 10)}`;
   };
 
   const handleInputChange = (event) => {
@@ -48,7 +48,6 @@ export function EditContact() {
     setCurrentContact({ ...currentContact, [name]: value2 });
   };
 
-  
   const handleSubmit = (event) => {
     event.preventDefault();
     if (
@@ -68,7 +67,6 @@ export function EditContact() {
     setSubmitted(true);
   };
 
-
   return (
     <>
       <div className="mx-auto max-w-2xl">
@@ -83,6 +81,7 @@ export function EditContact() {
               class="form-field"
               id="first-name"
               name="firstname"
+              autocomplete="off"
               value={currentContact.firstname}
               onChange={handleInputChange}
             />
@@ -99,6 +98,7 @@ export function EditContact() {
               class="form-field"
               id="last-name"
               name="lastname"
+              autocomplete="off"
               value={currentContact.lastname}
               onChange={handleInputChange}
             />
@@ -118,6 +118,7 @@ export function EditContact() {
                 class="form-field border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
                 id="phonenumber"
                 name="phonenumber"
+                autocomplete="off"
                 value={currentContact.phonenumber}
                 onChange={handleInputChange}
               />
