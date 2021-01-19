@@ -80,10 +80,6 @@ export function ListContacts() {
         </div>
       </div>
 
-      {loader ? (
-        <div className="text-center mt-20 text-2xl"> Loading... </div>
-      ) : null}
-
       <table className="table">
         <tbody>
           <tr className="border-b">
@@ -117,6 +113,9 @@ export function ListContacts() {
             ))}
         </tbody>
       </table>
+      {loader ? (
+        <div className="text-center mt-10 text-1xl"> Loading... </div>
+      ) : null}
     </>
   );
 }
