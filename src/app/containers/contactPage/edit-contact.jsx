@@ -78,7 +78,7 @@ export function EditContact() {
             <label className="label">Firstname</label>
             <input
               type="text"
-              class="form-field"
+              className="form-field"
               id="first-name"
               name="firstname"
               autocomplete="off"
@@ -95,7 +95,7 @@ export function EditContact() {
             <label className="label">Lastname</label>
             <input
               type="text"
-              class="form-field"
+              className="form-field"
               id="last-name"
               name="lastname"
               autocomplete="off"
@@ -115,7 +115,7 @@ export function EditContact() {
               <span className="icon-input">+</span>
               <input
                 type="text"
-                class="form-field border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
+                className="form-field border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
                 id="phonenumber"
                 name="phonenumber"
                 autocomplete="off"

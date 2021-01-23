@@ -61,7 +61,7 @@ export function AddContact() {
             <label className="label">Firstname</label>
             <input
               id="first-name"
-              class="form-field"
+              className="form-field"
               type="text"
               name="firstname"
               autocomplete="off"
@@ -78,7 +78,7 @@ export function AddContact() {
             <label className="label">Lastname</label>
             <input
               id="last-name"
-              class="form-field"
+              className="form-field"
               type="text"
               name="lastname"
               autocomplete="off"
@@ -99,7 +99,7 @@ export function AddContact() {
               <input
                 id="phonenumber"
                 autocomplete="off"
-                class="form-field border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
+                className="form-field border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
                 type="text"
                 placeholder=""
                 name="phonenumber"
