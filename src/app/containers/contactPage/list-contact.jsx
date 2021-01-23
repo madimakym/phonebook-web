@@ -8,13 +8,16 @@ import {
 
 export function ListContacts() {
   const [contacts, setContacts] = useState([]);
+  const [loader, setLoader] = useState(true);
   const fetchContacts = () => {
     getAll()
       .then((response) => {
         setContacts(response.data);
+        setLoader(false);
       })
       .catch((e) => {
         console.log(e);
+        setLoader(false);
       });
   };
 
@@ -67,6 +70,7 @@ export function ListContacts() {
                 id="first-name"
                 className="form-field"
                 placeholder="Search"
+                autocomplete="off"
                 type="text"
                 name="firstname"
                 onChange={handleSearch}
@@ -109,6 +113,9 @@ export function ListContacts() {
             ))}
         </tbody>
       </table>
+      {loader ? (
+        <div className="text-center mt-10 text-1xl"> Loading... </div>
+      ) : null}
     </>
   );
 }

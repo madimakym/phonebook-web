@@ -23,7 +23,7 @@ export function AddContact() {
     return `${currentValue.slice(0, 2)} ${currentValue.slice(
       2,
       4
-    )} ${currentValue.slice(4)}`;
+    )} ${currentValue.slice(4, 10)}`;
   };
 
   const handleInputChange = (event) => {
@@ -34,11 +34,7 @@ export function AddContact() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (
-      contact.firstname &&
-      contact.lastname &&
-      contact.phonenumber
-    ) {
+    if (contact.firstname && contact.lastname && contact.phonenumber) {
       create(contact)
         .then((response) => {
           console.log(response);
@@ -68,6 +64,7 @@ export function AddContact() {
               class="form-field"
               type="text"
               name="firstname"
+              autocomplete="off"
               value={contact.firstname}
               onChange={handleInputChange}
             />
@@ -84,6 +81,7 @@ export function AddContact() {
               class="form-field"
               type="text"
               name="lastname"
+              autocomplete="off"
               value={contact.lastname}
               onChange={handleInputChange}
             />
@@ -100,6 +98,7 @@ export function AddContact() {
               <span className="icon-input">+</span>
               <input
                 id="phonenumber"
+                autocomplete="off"
                 class="form-field border border-gray-300 px-12 py-2 w-full focus:outline-none relative outline-none focus:shadow-outline"
                 type="text"
                 placeholder=""
@@ -110,7 +109,7 @@ export function AddContact() {
             </div>
             {submitted && !contact.phonenumber && (
               <span id="phonenumber-error" className="error">
-                Please enter an phone number
+                Please enter a phone number
               </span>
             )}
           </div>
